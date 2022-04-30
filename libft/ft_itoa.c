@@ -6,15 +6,33 @@
 /*   By: npiya-is <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 13:30:30 by npiya-is          #+#    #+#             */
-/*   Updated: 2022/03/23 21:19:20 by npiya-is         ###   ########.fr       */
+/*   Updated: 2022/04/28 23:43:14 by npiya-is         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+int	ft_finddigit(long long n)
+{
+	int	j;
+
+	j = 0;
+	if (n < 0)
+		j = 1;
+	if (n == 0)
+		return (1);
+	while (n != 0)
+	{
+		n /= 10;
+		j++;
+	}
+	return (j);
+}
+
 char	*ft_convert_neg(long long n, int digit, char *str)
 {
-	while (digit > 0)
+	str[0] = '-';
+	while (digit > 1)
 	{
 		str[digit - 1] = '0' - (n % 10);
 		n /= 10;
@@ -37,15 +55,11 @@ char	*ft_convert(long long n, int digit, char *str)
 char	*ft_itoa(long long n)
 {
 	long long	num;
-	int		j;
-	char	*str;
+	int			j;
+	char		*str;
 
-	j = 1;
 	num = n;
-	while (n /= 10)
-		j++;
-	if (num < 0)
-		j += 1;
+	j = ft_finddigit(n);
 	str = malloc((j + 1) * sizeof(char));
 	if (!(str))
 		return (NULL);
@@ -53,10 +67,7 @@ char	*ft_itoa(long long n)
 	if (num >= 0)
 		str = ft_convert(num, j, str);
 	else
-	{
 		str = ft_convert_neg(num, j, str);
-		str[0] = '-';
-	}
 	return (str);
 }
 /*
