@@ -6,7 +6,7 @@
 /*   By: npiya-is <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 12:57:49 by npiya-is          #+#    #+#             */
-/*   Updated: 2022/09/04 00:33:23 by npiya-is         ###   ########.fr       */
+/*   Updated: 2022/09/25 23:56:10 by npiya-is         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,9 @@ static void	ft_sighandler(int signum, siginfo_t *info, void *context)
 {
 	if (signum == SIGUSR1 && info->si_pid && context)
 	{
-		usleep(1000);
-		ft_printf("server already receive from client\n");
+		usleep(2000);
+		ft_printf("server %d ", info->si_pid);
+		ft_printf("already receive signal from client.\n");
 		exit(0);
 	}
 }

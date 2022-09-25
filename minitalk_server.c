@@ -6,7 +6,7 @@
 /*   By: npiya-is <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 12:39:01 by npiya-is          #+#    #+#             */
-/*   Updated: 2022/09/04 00:44:14 by npiya-is         ###   ########.fr       */
+/*   Updated: 2022/09/25 23:55:54 by npiya-is         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	ft_sighandler(int signum, siginfo_t *info, void *context)
 			usleep(1000);
 			kill(info->si_pid, SIGUSR1);
 			write(1, "\n", 2);
-			ft_printf("receive signal from : %d\n", info->si_pid);
+			ft_printf("receive signal from client %d.\n", info->si_pid);
 		}
 		write(1, &bit, 1);
 		data_index = 8;
