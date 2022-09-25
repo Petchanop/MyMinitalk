@@ -6,54 +6,49 @@
 #    By: npiya-is <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 17:56:41 by npiya-is          #+#    #+#              #
-#    Updated: 2022/09/03 21:50:31 by npiya-is         ###   ########.fr        #
+#    Updated: 2022/09/25 23:17:34 by npiya-is         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC = gcc
-FLAGS = -Wall -Werror -Wextra
-NAME = libftprintf.a
-LIBC = libft.a
+NAME	= minitalk
+SERVER	= server
+CLIENT	= client
+PRINTF = printf
 
-INCS_DIR = ./srcs/include
-LIBFT_DIR = ./libft
-LIBFT = $(LIBFT_DIR)/$(LIBC)
+PRINTF_DIR = ft_printf
 
-BUILD_DIR = build
-SRC_DIR = ./srcs
-SRCS = ft_printf.c \
-       ft_printf_format.c \
-       ft_printf_format2.c \
-       ft_printf_utils.c \
-       ft_printf_utils2.c \
-       ft_format_placeholder.c \
-       ft_scan_placeholder.c \
-       ft_putstr_utils.c \
-       ft_putstr_utils2.c \
+SRCSSERVER	= minitalk_server.c \
 
-OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
+SRCSCLIENT	= minitalk_client.c \
+
+CC	= gcc
+CFLAGS	= -Wall -Werror -Wextra
+RM	= rm -f
+
+SERVER_OBJS	= $(SRCSSERVER:.c=.o)
+CLIENT_OBJS	= $(SRCSCLIENT:.c=.o)
 
 all:$(NAME)
 
-$(NAME):$(OBJS) $(LIBFT)
-	@ar rc $(NAME) $(OBJS)
+$(NAME):$(PRINTF) $(SERVER) $(CLIENT) 
 
-$(OBJS): $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -I $(INCS_DIR) -I $(LIBFT_DIR) -c $< -o $@
+$(PRINTF):
+	@make -C $(PRINTF_DIR)
 
-$(LIBFT):
-	@make bonus -C  $(LIBFT_DIR)
-	@cp $(LIBFT) $(NAME)
+$(SERVER): $(SERVER_OBJS)
+	$(CC) $(CFLAGS) $(SERVER_OBJS) -L$(PRINTF_DIR) -lftprintf -o $(SERVER) 
 
-bonus: all
+$(CLIENT): $(CLIENT_OBJS)
+	$(CC) $(CFLAGS) $(CLIENT_OBJS) -L$(PRINTF_DIR) -lftprintf -o $(CLIENT)
 
 clean:
-	@make clean -C $(LIBFT_DIR)
-	rm -rf $(BUILD_DIR)
+	@make -C ft_printf clean
+	$(RM) $(SERVER_OBJS) $(CLIENT_OBJS)
 
 fclean: clean
-	@make fclean -C $(LIBFT_DIR)
-	@rm -rf $(NAME)
+	@make -C ft_printf fclean
+	$(RM) $(SERVER) $(CLIENT)
 
 re: fclean all
+
+.PHONY: norminette all re fclean clean
