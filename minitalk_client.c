@@ -6,11 +6,17 @@
 /*   By: npiya-is <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 12:57:49 by npiya-is          #+#    #+#             */
-/*   Updated: 2022/09/25 23:56:10 by npiya-is         ###   ########.fr       */
+/*   Updated: 2022/09/26 15:19:18 by npiya-is         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+
+static void	handle_sigerror(void)
+{
+	ft_printf("Fail to send signal\n");
+	exit(0);
+}
 
 int	send_char_to_server(unsigned char c, int server_pid)
 {
@@ -62,15 +68,18 @@ int	main(int argc, char **argv)
 	{
 		process_id = ft_atoi(argv[1]);
 		while (argv[2][i])
-			send_char_to_server(argv[2][i++], process_id);
+		{
+			if (send_char_to_server(argv[2][i++], process_id) == 0)
+				handle_sigerror();
+		}
 		send_char_to_server(0, process_id);
 	}
 	usleep(1000);
-	server_sig.sa_flags = 0;
+	server_sig.sa_flags = SA_SIGINFO | SA_RESTART;
 	server_sig.sa_sigaction = &ft_response;
-	sigemptyset(&server_sig.sa_mask);
 	sigaction(SIGUSR1, &server_sig, NULL);
 	sigaction(SIGUSR2, &server_sig, NULL);
+	sigemptyset(&server_sig.sa_mask);
 	while (1)
 		usleep(1);
 	return (0);
